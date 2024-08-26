@@ -1,0 +1,20 @@
+name: Manual ls-tree Command with Parameter
+
+on:
+  workflow_dispatch:
+    inputs:
+      tree-depth:
+        description: 'Number of levels to display'
+        required: true
+        default: '1'
+
+jobs:
+  lstree:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Run ls-tree command
+      run: git ls-tree -r --name-only HEAD | awk -F"/" '{print NF-1}' | sort -nu | head -n ${{ github.event.inputs.tree-depth }}
